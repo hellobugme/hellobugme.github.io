@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
     <style type="text/css">
         div { margin-bottom: 8px;}
-        table { border-collapse: collapse; }
+        table { border-collapse: collapse; width: 100%; }
         th,td { padding: 4px; }
-        .hand { cursor: pointer; }
         .num { text-align: center; }
         .red { color: red; }
         .green { color: green; }
@@ -18,21 +17,49 @@
 </head>
 <body>
 <div id="nav">
-    <input type="button" value="精灵">
-    <input type="button" value="物品">
-    <input type="button" value="属性">
+    <input type="button" value="基本信息" data-tmpl="basicTmpl">
+    <input type="button" value="种族值" data-tmpl="statsTmpl">
+    <input type="button" value="捕获地点" data-tmpl="getTmpl">
 </div>
 <div id="content"></div>
 <script src="http://cdn.tgp.qq.com/lib/jq/jquery-1.11.1.min.js"></script>
-<script src="common.js"></script>
-<script src="DataBase.min.js"></script>
-<script type="text/tmpl" id="tmpl">
+<script src="../common.js"></script>
+<script src="../DataBase.min.js"></script>
+<script type="text/tmpl" id="basicTmpl">
     <table border="1px;">
         <colgroup>
             <col width="20px;"/>
             <col width="40px;"/>
             <col width="100px;"/>
             <col width="100px;"/>
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <th data-col="0" class="num" prop="No">No</th>
+                <th></th>
+                <th colspan="2">名字</th>
+                <th></th>
+            </tr>
+        </thead>
+        <% for(var i = 0, l = list.length; i < l; i++){
+            var pm = list[i];
+        %>
+        <tr>
+            <td class="num"><%=pm["No"]%></td>
+            <td><img src="<%=pm['Icon']%>"></td>
+            <td><%=pm["Name"]["JA"]%></td>
+            <td flag="NameCH"><%=pm["Name"]["CH"]%></td>
+            <td></td>
+        <tr>
+        <% } %>
+    </table>
+</script>
+<script type="text/tmpl" id="statsTmpl">
+    <table border="1px;">
+        <colgroup>
+            <col width="20px;"/>
+            <col width="40px;"/>
             <col width="20px;"/>
             <col width="20px;"/>
             <col width="20px;"/>
@@ -43,15 +70,46 @@
         </colgroup>
         <thead>
             <tr>
-                <th data-col="0" class="num hand" prop="No">No</th>
+                <th data-col="0" class="num" prop="No">No</th>
                 <th></th>
+                <th data-col="2" class="num" prop="BaseStats.HP" title="エイチピー">HP</th>
+                <th data-col="3" class="num" prop="BaseStats.Attack" title="こうげき">攻</th>
+                <th data-col="4" class="num" prop="BaseStats.Defense" title="ぼうぎょ">防</th>
+                <th data-col="5" class="num" prop="BaseStats.Speed" title="すばやさ">敏</th>
+                <th data-col="6" class="num" prop="BaseStats.Special" title="とくしゅ">特</th>
+                <th data-col="7" class="num" prop="BaseStats.Total" title="しゅぞくち">总</th>
+                <th></th>
+            </tr>
+        </thead>
+        <% for(var i = 0, l = list.length; i < l; i++){
+            var pm = list[i];
+        %>
+        <tr>
+            <td class="num"><%=pm["No"]%></td>
+            <td><img src="<%=pm['Icon']%>"></td>
+            <td class="num gray"><%=pm["BaseStats"]["HP"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Attack"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Defense"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Speed"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Special"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Total"]%></td>
+            <td></td>
+        <tr>
+        <% } %>
+    </table>
+</script>
+<script type="text/tmpl" id="getTmpl">
+    <table border="1px;">
+        <colgroup>
+            <col width="20px;"/>
+            <col width="40px;"/>
+            <col width="100px;"/>
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <th data-col="0" class="num" prop="No">No</th>
                 <th colspan="2">名字</th>
-                <th data-col="4" class="num hand" prop="BaseStats.HP" title="エイチピー">HP</th>
-                <th data-col="5" class="num hand" prop="BaseStats.Attack" title="こうげき">攻</th>
-                <th data-col="6" class="num hand" prop="BaseStats.Defense" title="ぼうぎょ">防</th>
-                <th data-col="7" class="num hand" prop="BaseStats.Speed" title="すばやさ">敏</th>
-                <th data-col="8" class="num hand" prop="BaseStats.Special" title="とくしゅ">特</th>
-                <th data-col="9" class="num hand" prop="BaseStats.Total" title="しゅぞくち">总</th>
                 <th>捕获地点</th>
             </tr>
         </thead>
@@ -61,14 +119,7 @@
         <tr>
             <td class="num"><%=pm["No"]%></td>
             <td><img src="<%=pm['Icon']%>"></td>
-            <td><%=pm["Name"]["JA"]%></td>
             <td class="hand" flag="NameCH"><%=pm["Name"]["CH"]%></td>
-            <td class="num gray"><%=pm["BaseStats"]["HP"]%></td>
-            <td class="num gray"><%=pm["BaseStats"]["Attack"]%></td>
-            <td class="num gray"><%=pm["BaseStats"]["Defense"]%></td>
-            <td class="num gray"><%=pm["BaseStats"]["Speed"]%></td>
-            <td class="num gray"><%=pm["BaseStats"]["Special"]%></td>
-            <td class="num gray"><%=pm["BaseStats"]["Total"]%></td>
             <td><%=pm.Get%></td>
         <tr>
         <% } %>
@@ -78,7 +129,7 @@
 var PM_Ary = [];
 $.each(PM, function(){
     this["No"] = $num2str(this["No"], 3);
-    this["Icon"] = 'res/n' + this["No"] + '.png';
+    this["Icon"] = '../res/n' + this["No"] + '.png';
     this["Get"] = this["Get"].replace(/红莲/g, 'HL').replace(/绿毛虫/g, 'LMC')
                    .replace(/红/g, '<span class="red">红</span>')
                    .replace(/绿/g, '<span class="green">绿</span>')
@@ -88,7 +139,15 @@ $.each(PM, function(){
     PM_Ary.push(this);
 });
 
-var prop = 'No', order = 1;
+var tmpl = 'basicTmpl', prop = 'No', order = 1;
+$('#nav').on('click', 'input', function(){
+    prop = 'No';
+    order = 1;
+    tmpl = $(this).data('tmpl');
+    $(this).attr("disabled", true).siblings().attr("disabled", false);
+    sort();
+    show();
+});
 $('#content').on('click', '[prop]', function(){
     var attr = $(this).attr("prop");
     order = attr === prop ? (order * -1) : 1;
@@ -100,7 +159,7 @@ $('#content').on('click', '[prop]', function(){
 });
 function show(){
     var html = $compile({
-        id : "tmpl",
+        id : tmpl,
         data : {
             list : PM_Ary,
             prop : prop,
@@ -120,8 +179,7 @@ function sort(){
         return (+$getProp(a, prop) < +$getProp(b, prop) ? -1 : 1) * order;
     });
 }
-sort();
-show();
+$('#nav').find('input').first().click();
 </script>
 </body>
 </html>
