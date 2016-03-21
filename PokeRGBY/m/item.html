@@ -95,6 +95,7 @@ var list, type;
 $('#type').on('click', 'input', function(){
     type = $(this).val();
     list = ITEM[type];
+    $(this).attr("disabled", true).siblings().attr("disabled", false);
     show();
 });
 function show(){

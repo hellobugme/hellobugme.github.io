@@ -33,8 +33,8 @@
 </div>
 <div id="content"></div>
 <script src="http://cdn.tgp.qq.com/lib/jq/jquery-1.11.1.min.js"></script>
-<script src="common.js"></script>
-<script src="DataBase.min.js"></script>
+<script src="../common.js"></script>
+<script src="../DataBase.min.js"></script>
 <script type="text/tmpl" id="tmpl">
     <table border="1px;">
         <colgroup>
@@ -95,6 +95,7 @@ var list, type;
 $('#type').on('click', 'input', function(){
     type = $(this).val();
     list = ITEM[type];
+    $(this).attr("disabled", true).siblings().attr("disabled", false);
     show();
 });
 function show(){
