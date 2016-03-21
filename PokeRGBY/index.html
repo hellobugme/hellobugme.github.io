@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>PokeRGBY</title>
+    <style type="text/css">
+        table { border-collapse: collapse; }
+        th,td { padding: 4px; }
+        .hand { cursor: pointer; }
+        .num { width: 20px; text-align: center; /* font-family: arial; */ }
+        .icon { width: 8px; }
+        .name { width: 60px; }
+        .desc { width: 160px; }
+        .red { color: red; }
+        .green { color: green; }
+        .blue { color: blue; }
+        .yellow { color: orange; }
+        .gray { background-color: #EEE; }
+    </style>
+</head>
+<body>
+<div id="content"></div>
+<script src="http://cdn.tgp.qq.com/lib/jq/jquery-1.11.1.min.js"></script>
+<script src="common.js"></script>
+<script src="DataBase.min.js"></script>
+<script type="text/tmpl" id="tableTmpl">
+    <table border="1px;">
+        <tr>
+            <th class="num hand" prop="No">编号</th>
+            <th colspan="3">名字</th>
+            <th class="num hand" prop="BaseStats.HP" title="エイチピー">HP</th>
+            <th class="num hand" prop="BaseStats.Attack" title="こうげき">攻击</th>
+            <th class="num hand" prop="BaseStats.Defense" title="ぼうぎょ">防御</th>
+            <th class="num hand" prop="BaseStats.Speed" title="すばやさ">敏捷</th>
+            <th class="num hand" prop="BaseStats.Special" title="とくしゅ">特殊</th>
+            <th class="num hand" prop="BaseStats.Total" title="しゅぞくち">种族</th>
+            <th class="desc">获得方法</th>
+        </tr>
+        <% for(var i = 0, l = list.length; i < l; i++){
+            var pm = list[i],
+                No = $num2str(pm["No"], 3),
+                icon = 'res/n' + No + '.png',
+                Desc = pm["Get"].replace(/红莲/g, 'HL').replace(/绿毛虫/g, 'LMC')
+                                .replace(/红/g, '<span class="red">红</span>')
+                                .replace(/绿/g, '<span class="green">绿</span>')
+                                .replace(/蓝/g, '<span class="blue">蓝</span>')
+                                .replace(/黄/g, '<span class="yellow">黄</span>')
+                                .replace(/HL/g, "红莲").replace(/LMC/g, '绿毛虫');
+        %>
+        <tr>
+            <td class="num"><%=No%></td>
+            <td class="icon"><img src="<%=icon%>"></td>
+            <td class="name"><%=pm["Name"]["JA"]%></td>
+            <td class="name hand" flag="NameCH"><%=pm["Name"]["CH"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["HP"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Attack"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Defense"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Speed"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Special"]%></td>
+            <td class="num gray"><%=pm["BaseStats"]["Total"]%></td>
+            <td><%=Desc%></td>
+        <tr>
+        <% } %>
+    </table>
+</script>
+<script>
+var PM_Ary = [];
+$.each(PM, function(){ PM_Ary.push(this); });
+
+var prop = 'No', order = 1;
+$('#content').on('click', '[prop]', function(){
+    var attr = $(this).attr("prop");
+    order = attr === prop ? (order * -1) : 1;
+    prop = attr;
+    sort();
+    show();
+}).on('click', '[flag="NameCH"]', function(){
+    window.open('http://www.pokemon.name/wiki/' + this.innerHTML + '/技能表（第一世代）');
+});
+function show(){
+    var html = $compile({
+        id : 'tableTmpl',
+        data : {
+            list : PM_Ary,
+            prop : prop,
+            order : order
+        }
+    });
+    $('#content').html(html);
+    var sortNode = $('#content').find('[prop="' + prop + '"]');
+    sortNode.html(sortNode.html() + (order > 0 ? '▲' : '▼')).css('width', 34);
+}
+function sort(){
+    PM_Ary.sort(function(a, b){
+        return (+$getProp(a, prop) < +$getProp(b, prop) ? -1 : 1) * order;
+    });
+}
+sort();
+show();
+</script>
+</body>
+</html>
