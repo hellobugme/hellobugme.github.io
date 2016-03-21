@@ -17,6 +17,10 @@
 </head>
 <body>
 <div id="nav">
+    <a href="index.html">精灵</a>
+    <a href="item.html">物品</a>
+</div>
+<div id="type">
     <input type="button" value="基本信息" data-tmpl="basicTmpl">
     <input type="button" value="种族值" data-tmpl="statsTmpl">
     <input type="button" value="捕获地点" data-tmpl="getTmpl">
@@ -141,7 +145,7 @@ $.each(PM, function(){
 });
 
 var tmpl = 'basicTmpl', prop = 'No', order = 1;
-$('#nav').on('click', 'input', function(){
+$('#type').on('click', 'input', function(){
     prop = 'No';
     order = 1;
     tmpl = $(this).data('tmpl');
@@ -180,7 +184,7 @@ function sort(){
         return (+$getProp(a, prop) < +$getProp(b, prop) ? -1 : 1) * order;
     });
 }
-$('#nav').find('input').first().click();
+$('#type').find('input').first().click();
 </script>
 </body>
 </html>

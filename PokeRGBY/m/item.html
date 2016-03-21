@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>PokeRGBY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <style type="text/css">
+        div { margin-bottom: 8px;}
+        table { border-collapse: collapse; }
+        th,td { padding: 4px; }
+        .hand { cursor: pointer; }
+        .num { text-align: center; }
+        .red { color: red; }
+        .green { color: green; }
+        .blue { color: blue; }
+        .yellow { color: orange; }
+        .gray { background-color: #EEE; }
+    </style>
+</head>
+<body>
+<div id="nav">
+    <a href="index.html">精灵</a>
+    <a href="item.html">物品</a>
+</div>
+<div id="type">
+    <input type="button" value="药剂">
+    <input type="button" value="精灵球">
+    <input type="button" value="重要道具">
+    <input type="button" value="战斗药">
+    <input type="button" value="补药">
+    <input type="button" value="进化石">
+    <input type="button" value="其他">
+    <input type="button" value="技能机">
+</div>
+<div id="content"></div>
+<script src="http://cdn.tgp.qq.com/lib/jq/jquery-1.11.1.min.js"></script>
+<script src="../common.js"></script>
+<script src="../DataBase.min.js"></script>
+<script type="text/tmpl" id="tmpl">
+    <table border="1px;">
+        <colgroup>
+            <% if(type === "技能机"){ %>
+            <col width="60px;"/>
+            <% } %>
+            <col width="100px;"/>
+            <col width="100px;"/>
+            <% if(type === "技能机"){ %>
+            <col width="40px;">
+            <col width="60px;">
+            <col width="40px;">
+            <% }else if(type !== "重要道具"){ %>
+            <col width="60px;">
+            <% } %>
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <% if(type === "技能机"){ %>
+                <th>技能机</th>
+                <% } %>
+                <th colspan="2">名字</th>
+                <% if(type === "技能机"){ %>
+                <th>威力</th>
+                <th>命中</th>
+                <th>PP</th>
+                <% }else if(type !== "重要道具"){ %>
+                <th>价格</th>
+                <% } %>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <% for(var i = 0, l = list.length; i < l; i++){
+            var item = list[i],
+                prop = (item["属性"] || "").split(" ");
+        %>
+        <tr>
+            <% if(type === "技能机"){ %>
+            <td class="num"><%=item["技能机"]%></td>
+            <% } %>
+            <td><%=item["日文名"]%></td>
+            <td><%=item["中文名"]%></td>
+            <% if(type === "技能机"){ %>
+            <td class="num gray"><%=prop[0]%></td>
+            <td class="num gray"><%=prop[1]%></td>
+            <td class="num gray"><%=prop[2]%></td>
+            <% }else if(type !== "重要道具"){ %>
+            <td class="num"><%=item["价格"]%></td>
+            <% } %>
+            <td><%=type==="技能机" ? "" : item["说明"]%></td>
+        <tr>
+        <% } %>
+    </table>
+</script>
+<script>
+var list, type;
+$('#type').on('click', 'input', function(){
+    type = $(this).val();
+    list = ITEM[type];
+    show();
+});
+function show(){
+    var html = $compile({
+        id : "tmpl",
+        data : {
+            list : list,
+            type : type
+        }
+    });
+    $('#content').html(html);
+}
+$('#type').find('input').first().click();
+</script>
+</body>
+</html>
